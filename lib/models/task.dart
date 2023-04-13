@@ -7,6 +7,7 @@ class Task {
   int id;
 
   String text;
+
   bool status;
 
   Task(this.text, {this.id = 0, this.status = false});

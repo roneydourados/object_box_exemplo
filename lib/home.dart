@@ -13,21 +13,30 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _counter = 0;
-  late final Owner owner;
+  late final Owner _owner;
+  List<Owner> _owners = [];
 
-  void _incrementCounter() {
+  _addOwner(String name) async {
+    _owner = await context.read<OwnerController>().add(name);
+
     setState(() {
-      _counter++;
+      _owners.add(_owner);
     });
   }
 
-  _addOwner(String name) async {
-    context.read<OwnerController>().add(name);
+  _allOwners() async {
+    _owners = await context.read<OwnerController>().all();
+
+    setState(() {
+      _owners.first;
+    });
   }
 
-  _allOwners() async {
-    context.read<OwnerController>().all();
+  @override
+  void initState() {
+    super.initState();
+
+    _allOwners();
   }
 
   @override
@@ -36,26 +45,34 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView.builder(
+            itemCount: _owners.length,
+            itemBuilder: (context, index) {
+              return Container(
+                color: Colors.green,
+                height: 50,
+                child: Center(
+                  child: Text(
+                    _owners[index].name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            }),
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //_addOwner('Roney Melo');
-          _allOwners();
+          _addOwner('Roney Melo');
+          //_allOwners();
         },
-        tooltip: 'Increment',
+        tooltip: 'Novo contato',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
