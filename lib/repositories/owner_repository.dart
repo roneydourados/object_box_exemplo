@@ -25,6 +25,7 @@ class OwnerRepository extends ChangeNotifier {
     final resId = box.put(owner);
 
     owner.id = resId;
+
     return owner;
   }
 
@@ -36,7 +37,7 @@ class OwnerRepository extends ChangeNotifier {
     return owner;
   }
 
-  void remove(Owner owner) async {
+  Future<void> remove(Owner owner) async {
     final box = await getBox();
 
     box.remove(owner.id);

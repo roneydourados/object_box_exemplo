@@ -18,15 +18,15 @@ class OwnerController extends ChangeNotifier {
     return await _ownerRepository.findByName(name);
   }
 
-  void add(String name) {
-    _ownerRepository.add(name);
+  Future<Owner> add(String name) async {
+    return await _ownerRepository.add(name);
   }
 
-  void update(Owner owner) {
-    _ownerRepository.update(owner);
+  Future<Owner> update(Owner owner) async {
+    return await _ownerRepository.update(owner);
   }
 
-  void remove(Owner owner) {
-    _ownerRepository.remove(owner);
+  Future<void> remove(Owner owner) async {
+    await _ownerRepository.remove(owner);
   }
 }
