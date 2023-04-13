@@ -10,9 +10,10 @@ class OwnerRepository extends ChangeNotifier {
 
   OwnerRepository(this._database);
 
-  Future<Box> getBox() async {
+  Future<Box> _getBox() async {
     final store = await _database.getStore();
-    return store!.box<Owner>();
+
+    return store.box<Owner>();
   }
 
   List<Owner> get owners => _owners;
@@ -20,7 +21,7 @@ class OwnerRepository extends ChangeNotifier {
   Future<Owner> add(String name) async {
     final owner = Owner(name);
 
-    final box = await getBox();
+    final box = await _getBox();
 
     final resId = box.put(owner);
 
@@ -30,7 +31,7 @@ class OwnerRepository extends ChangeNotifier {
   }
 
   Future<Owner> update(Owner owner) async {
-    final box = await getBox();
+    final box = await _getBox();
 
     box.put(owner);
 
@@ -38,13 +39,13 @@ class OwnerRepository extends ChangeNotifier {
   }
 
   Future<void> remove(Owner owner) async {
-    final box = await getBox();
+    final box = await _getBox();
 
     box.remove(owner.id);
   }
 
   Future<List<Owner>> all() async {
-    final box = await getBox();
+    final box = await _getBox();
 
     _owners = box.getAll() as List<Owner>;
 
@@ -52,7 +53,7 @@ class OwnerRepository extends ChangeNotifier {
   }
 
   Future<List<Owner>> findByName(String name) async {
-    final box = await getBox();
+    final box = await _getBox();
 
     final query = box.query(Owner_.name.contains(name)).build();
 
