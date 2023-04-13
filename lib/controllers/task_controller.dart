@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:teste_object_box/database/objectbox_database.dart';
+import 'package:teste_object_box/database/database.dart';
 import 'package:teste_object_box/models/owner.dart';
 import 'package:teste_object_box/models/task.dart';
 import 'package:teste_object_box/repositories/task_repository.dart';
 
 class TaskController extends ChangeNotifier {
-  late final ObjectBoxDatabase _database;
+  late final Database _database;
 
   late final TaskRepository _taskReposotiry = TaskRepository(_database);
 
@@ -19,7 +19,7 @@ class TaskController extends ChangeNotifier {
     return await _taskReposotiry.update(task);
   }
 
-  Future<void> delete(Task task) async {
+  Future<void> remove(Task task) async {
     await _taskReposotiry.remove(task);
   }
 

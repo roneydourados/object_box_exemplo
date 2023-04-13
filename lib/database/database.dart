@@ -1,6 +1,6 @@
 import '../objectbox.g.dart';
 
-class ObjectBoxDatabase {
+class Database {
   Store? _store;
 
   Future<Store> getStore() async {

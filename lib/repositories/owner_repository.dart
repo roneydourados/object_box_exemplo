@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:teste_object_box/database/objectbox_database.dart';
+import 'package:teste_object_box/database/database.dart';
 import 'package:teste_object_box/models/owner.dart';
 import '../objectbox.g.dart';
 
 class OwnerRepository extends ChangeNotifier {
   List<Owner> _owners = [];
 
-  late final ObjectBoxDatabase _database;
+  late final Database _database;
 
   OwnerRepository(this._database);
 
