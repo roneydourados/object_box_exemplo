@@ -5,6 +5,7 @@ import '../objectbox.g.dart';
 
 class TaskRepository {
   List<Task> _tasks = [];
+  late final Task _task;
 
   late final Database _database;
 
@@ -18,24 +19,26 @@ class TaskRepository {
 
   List<Task> get tasks => _tasks;
 
-  Future<Task> add(String text, Owner owner) async {
-    final task = Task(text);
+  Task get task => _task;
 
-    task.owner.target = owner;
+  add(String text, Owner owner) async {
+    final taskNew = Task(text);
+
+    taskNew.owner.target = owner;
 
     final box = await _getBox();
 
-    box.put(task);
+    box.put(taskNew);
 
-    return task;
+    _task = taskNew;
   }
 
-  Future<Task> update(Task task) async {
+  update(Task task) async {
     final box = await _getBox();
 
     box.put(task);
 
-    return task;
+    _task = task;
   }
 
   Future<void> remove(Task task) async {
@@ -44,15 +47,13 @@ class TaskRepository {
     box.remove(task.id);
   }
 
-  Future<List<Task>> all() async {
+  all() async {
     final box = await _getBox();
 
     _tasks = box.getAll() as List<Task>;
-
-    return _tasks;
   }
 
-  Future<List<Task>> allDone() async {
+  allDone() async {
     final box = await _getBox();
 
     final query = box.query(Task_.status.equals(false)).build();
@@ -60,7 +61,5 @@ class TaskRepository {
     _tasks = query.find() as List<Task>;
 
     query.close();
-
-    return _tasks;
   }
 }

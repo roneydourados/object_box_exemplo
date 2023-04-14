@@ -6,27 +6,36 @@ import 'package:teste_object_box/repositories/owner_repository.dart';
 class OwnerController extends ChangeNotifier {
   late final Database _database;
 
+  List<Owner> _owners = [];
+
   late final OwnerRepository _ownerRepository = OwnerRepository(_database);
 
   OwnerController(this._database);
 
-  Future<List<Owner>> all() async {
-    return await _ownerRepository.all();
+  List<Owner> get owners => _owners;
+
+  all() async {
+    await _ownerRepository.all();
+    _owners = _ownerRepository.owners;
+    notifyListeners();
   }
 
-  Future<List<Owner>> findByName(String name) async {
-    return await _ownerRepository.findByName(name);
+  findByName(String name) {
+    _ownerRepository.findByName(name);
+    _owners = _ownerRepository.owners;
   }
 
-  Future<Owner> add(String name) async {
-    return await _ownerRepository.add(name);
+  add(String name) {
+    _ownerRepository.add(name);
+    _owners = _ownerRepository.owners;
   }
 
-  Future<Owner> update(Owner owner) async {
-    return await _ownerRepository.update(owner);
+  update(Owner owner) {
+    _ownerRepository.update(owner);
+    _owners = _ownerRepository.owners;
   }
 
-  Future<void> remove(Owner owner) async {
-    await _ownerRepository.remove(owner);
+  remove(Owner owner) {
+    _ownerRepository.remove(owner);
   }
 }

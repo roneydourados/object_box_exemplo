@@ -2,13 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:teste_object_box/controllers/owner_controller.dart';
-import 'package:teste_object_box/models/owner.dart';
 import 'package:provider/provider.dart';
 
-class Home extends StatefulWidget {
-  Home({super.key, required this.title});
+final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late Owner _owner;
+class Home extends StatefulWidget {
+  const Home({super.key, required this.title});
 
   final String title;
 
@@ -17,51 +16,47 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Owner> _owners = [];
+  final loading = ValueNotifier(true);
+  final showOwners = ValueNotifier(false);
 
-  _addOwner(String name) async {
-    widget._owner = await context
+  _addOwner(String name) {
+    context
         .read<OwnerController>()
-        .add('${_owners.length + 1} - $name');
-
-    setState(() {
-      _owners.add(widget._owner);
-    });
-  }
-
-  _allOwners() async {
-    _owners = await context.read<OwnerController>().all();
-
-    if (_owners.isNotEmpty) {
-      setState(() {
-        _owners.last;
-      });
-    }
+        .add('${context.read<OwnerController>().owners.length + 1} - $name');
   }
 
   @override
   void initState() {
     super.initState();
 
-    _allOwners();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await getAllOwners();
+      loading.value = false;
+    });
+    showOwners.addListener(getAllOwners);
+  }
+
+  Future<void> getAllOwners() async {
+    await context.read<OwnerController>().all();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView.builder(
-          itemCount: _owners.length,
+          itemCount: context.read<OwnerController>().owners.length,
           itemBuilder: (context, index) {
             return Container(
               padding: const EdgeInsets.all(8),
               height: 50,
               child: Text(
-                _owners[index].name,
+                context.read<OwnerController>().owners[index].name,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
