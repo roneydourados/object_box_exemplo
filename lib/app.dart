@@ -12,7 +12,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home(title: 'Flutter Demo Object Box'),
+      home: Home(title: 'Demo Object Box'),
     );
   }
 }
